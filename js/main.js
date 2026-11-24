@@ -22,4 +22,18 @@ async function getPriceBtc() {
   }
 }
 
+async function getCoins(){
+    const url = `${BASE_URL}/coins/markets?vs_currency=usd&per_page=10`
+    try {
+        const coins = await fetchData(url);
+        console.log(coins);
+        coins.forEach(coin => {
+            console.log(`${coin.name}: $${coin.current_price}`)
+        });
+    } catch(error) {
+        console.error(error);
+    }
+}
+
 getPriceBtc();
+getCoins();
