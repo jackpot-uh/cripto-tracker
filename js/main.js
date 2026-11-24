@@ -9,40 +9,30 @@ async function fetchData(url) {
   return data;
 }
 
-async function getPriceBtc() {
-  const priceElement = document.querySelector("#price-btc");
-  const url = `${BASE_URL}/simple/price?ids=bitcoin&vs_currencies=usd`
-  try {
-    const data = await fetchData(url);
-    const price = data.bitcoin.usd; // find the value in usd and store it in the price variable
-    priceElement.textContent = `The BTC price is $${price}`;
-  } catch (error) {
-    console.error(error);
-    priceElement.textContent = `Could not load the price. Try again later.`;
-  }
-}
-
 // This function retrieves all the coins I need and displays them on the page by generating HTML elements with their image, name, and price.
-async function getCoins(){
-    const url = `${BASE_URL}/coins/markets?vs_currency=usd&per_page=10`;
-    const container = document.querySelector(`#coins-list`)
-    try {
-        const coins = await fetchData(url);
-        console.log(coins);
-        coins.forEach(coin => { // iterate all elements of this array
-            const card = document.createElement(`article`) //creates an item and stores it in the “card” variable
-            card.innerHTML = `  
+async function getCoins() {
+  const url = `${BASE_URL}/coins/markets?vs_currency=usd&per_page=20`;
+  const container = document.querySelector(`#coins-list`);
+  try {
+    const coins = await fetchData(url);
+    coins.forEach((coin) => {
+      // iterate all elements of this array
+      const card = document.createElement(`article`); //creates an item and stores it in the “card” variable
+      const change = coin.price_change_percentage_24h;
+      const changeClass = change >= 0 ? `up` : `down`;
+      const changeClassValue = change > 0 ? `+` : ``; 
+      card.innerHTML = `  
             <img src="${coin.image}" alt="${coin.name}">
             <h3>${coin.name}</h3>
             <p>$${coin.current_price}</p>
+            <p class="${changeClass}">${changeClassValue}${change.toFixed(3)}%</p>
             `; // interpretate HTML content and allow create new elements
-            container.append(card); // Insert the card into the container
-        });
-
-    } catch(error) {
-        console.error(error);
-    }
+      container.append(card); // Insert the card into the container
+    });
+  } catch (error) {
+    console.error(error);
+    document.textContent = `Sorry, the content cannot be loaded :(`;
+  }
 }
 
-getPriceBtc();
 getCoins();
