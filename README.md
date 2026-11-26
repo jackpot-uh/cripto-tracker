@@ -4,6 +4,6 @@ Unfinished
 
 What's Missing:
 
-Improve code
-CSS
+Improve code, 
+CSS, 
 New features
